@@ -12,7 +12,7 @@ const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-	entry: './src/index',
+	entry: ['babel-polyfill', './src/index'],
   mode: 'development',
 
 	output: {
@@ -23,16 +23,14 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader',
-
-				options: {
-					presets: ['env']
-				}
+        options: { presets: ['env'] }
 			}
 		]
 	},
+  resolve: { extensions: ['*', '.js', '.jsx'] },
 
 	//plugins: [new UglifyJSPlugin()]
 };

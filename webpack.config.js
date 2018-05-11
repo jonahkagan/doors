@@ -27,7 +27,11 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: 'babel-loader',
         options: { presets: ['env'] }
-			}
+			},
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      }
 		]
 	},
   resolve: { extensions: ['*', '.js', '.jsx'] },

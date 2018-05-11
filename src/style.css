@@ -52,8 +52,55 @@ html, body {
   width: 100%;
   background: #000000;
   color: #ffffff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+video {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg); /* Safari and Chrome */
+  -moz-transform: rotateY(180deg); /* Firefox */
 }
 
 .videos {
   line-height: 0;
 }
+
+.recorder {
+  display: inline-block;
+  position: relative;
+}
+
+.queuedIcon {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  /*height: 30px;*/
+  /*width: 30px;*/
+  /*border-radius: 30px;*/
+  /*background: #FF851B;*/
+}
+/*.queuedIconText {*/
+/*  position: relative;*/
+/*  text-align: center;*/
+/*  color: white;*/
+/*  font-size: 20px;*/
+/*  top: 15px;*/
+/*}*/
+
+.recordingIcon {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+  background: #FF4136;
+  animation: pulse 1s infinite;
+}
+
+@-webkit-keyframes pulse {
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+

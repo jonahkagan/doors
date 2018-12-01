@@ -16,6 +16,9 @@ export default class FourSquare extends React.Component {
       duration: null
     };
     this.webcam = null;
+
+    this.onSpacebar = this.onSpacebar.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   async componentDidMount() {
@@ -25,6 +28,16 @@ export default class FourSquare extends React.Component {
     });
     this.webcam.srcObject = stream;
     this.setState({ recorder: new MediaRecorder(stream) });
+  }
+
+  componentWillMount() {
+    document.addEventListener("click", this.onClick);
+    document.addEventListener("keydown", this.onSpacebar);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.onClick);
+    document.removeEventListener("keydown", this.onSpacebar);
   }
 
   async startRecording() {
@@ -65,6 +78,17 @@ export default class FourSquare extends React.Component {
     }
   }
 
+  onClick() {
+    this.toggleRecording();
+  }
+
+  onSpacebar(e) {
+    if (e.key === " ") {
+      this.toggleRecording();
+      e.preventDefault();
+    }
+  }
+
   toggleRecording() {
     const { recordingState, duration } = this.state;
     switch (recordingState) {
@@ -83,16 +107,6 @@ export default class FourSquare extends React.Component {
   render() {
     const { recorder, recording, recordingState } = this.state;
 
-    if (recorder) {
-      document.addEventListener("click", () => this.toggleRecording());
-      //document.addEventListener("keyDown", e => {
-      //  if (e.key === " ") {
-      //    this.toggleRecording();
-      //    e.preventDefault();
-      //  }
-      //});
-    }
-
     const width = Math.floor(document.body.clientWidth / 2);
     const height = Math.floor(document.body.clientHeight);
     const style = {
@@ -105,7 +119,7 @@ export default class FourSquare extends React.Component {
     };
 
     return (
-      <div>
+      <div style={{ display: "flex" }}>
         {!recorder && (
           <div style={{ marginTop: 10 }}>Waiting for webcam...</div>
         )}

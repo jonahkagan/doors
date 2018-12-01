@@ -19,6 +19,9 @@ export default class FourSquare extends React.Component {
     };
     this.webcam = null;
     this.videos = [];
+
+    this.onSpacebar = this.onSpacebar.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   async componentDidMount() {
@@ -30,8 +33,17 @@ export default class FourSquare extends React.Component {
     this.setState({ recorder: new MediaRecorder(stream) });
   }
 
+  componentWillMount() {
+    document.addEventListener("click", this.onClick);
+    document.addEventListener("keydown", this.onSpacebar);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.onClick);
+    document.removeEventListener("keydown", this.onSpacebar);
+  }
+
   async startRecording() {
-    console.log("start");
     const { recorder, recordings, duration, index } = this.state;
 
     this.setState({
@@ -41,7 +53,6 @@ export default class FourSquare extends React.Component {
 
     const data = [];
     recorder.ondataavailable = event => {
-      console.log("data");
       data.push(event.data);
       if (duration) {
         this.stopRecording();
@@ -64,7 +75,6 @@ export default class FourSquare extends React.Component {
   }
 
   async stopRecording() {
-    console.log("stop");
     const { recorder } = this.state;
     if (recorder.state == "recording") {
       recorder.stop();
@@ -83,7 +93,6 @@ export default class FourSquare extends React.Component {
 
   toggleRecording() {
     const { recordingState, duration } = this.state;
-    console.log("toggle", recordingState);
     switch (recordingState) {
       case "none":
         if (this.videos.length === 0) {
@@ -115,6 +124,17 @@ export default class FourSquare extends React.Component {
     }
   }
 
+  onClick() {
+    this.toggleRecording();
+  }
+
+  onSpacebar(e) {
+    if (e.key === " ") {
+      this.toggleRecording();
+      e.preventDefault();
+    }
+  }
+
   render() {
     const {
       recorder,
@@ -123,18 +143,6 @@ export default class FourSquare extends React.Component {
       recordingState,
       nextVideoStartTime
     } = this.state;
-
-    if (recorder) {
-      document.addEventListener("click", e => {
-        this.toggleRecording();
-      });
-      document.addEventListener("keydown", e => {
-        if (e.key === " ") {
-          this.toggleRecording();
-          e.preventDefault();
-        }
-      });
-    }
 
     const [width, height] =
       document.body.clientWidth < document.body.clientHeight

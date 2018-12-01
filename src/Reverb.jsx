@@ -13,11 +13,12 @@ export default class FourSquare extends React.Component {
       recorder: null,
       recordingState: "none", // none or recording
       recording: null,
-      duration: null
+      duration: null,
+      mirrored: false
     };
     this.webcam = null;
 
-    this.onSpacebar = this.onSpacebar.bind(this);
+    this.onKey = this.onKey.bind(this);
     this.onClick = this.onClick.bind(this);
   }
 
@@ -32,12 +33,12 @@ export default class FourSquare extends React.Component {
 
   componentWillMount() {
     document.addEventListener("click", this.onClick);
-    document.addEventListener("keydown", this.onSpacebar);
+    document.addEventListener("keydown", this.onKey);
   }
 
   componentWillUnmount() {
     document.removeEventListener("click", this.onClick);
-    document.removeEventListener("keydown", this.onSpacebar);
+    document.removeEventListener("keydown", this.onKey);
   }
 
   async startRecording() {
@@ -82,10 +83,12 @@ export default class FourSquare extends React.Component {
     this.toggleRecording();
   }
 
-  onSpacebar(e) {
+  onKey(e) {
     if (e.key === " ") {
       this.toggleRecording();
       e.preventDefault();
+    } else if (e.key === "m") {
+      this.setState({ mirrored: !this.state.mirrored });
     }
   }
 
@@ -105,7 +108,7 @@ export default class FourSquare extends React.Component {
   }
 
   render() {
-    const { recorder, recording, recordingState } = this.state;
+    const { recorder, recording, recordingState, mirrored } = this.state;
 
     const width = Math.floor(document.body.clientWidth / 2);
     const height = Math.floor(document.body.clientHeight);
@@ -132,7 +135,7 @@ export default class FourSquare extends React.Component {
           />
         </div>
         {recording && (
-          <div style={style}>
+          <div style={{ ...style, transform: `scaleX(${mirrored ? -1 : 1})` }}>
             <video
               src={createObjectURL(recording)}
               height={height}

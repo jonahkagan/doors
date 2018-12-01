@@ -101,7 +101,7 @@ export default class FourSquare extends React.Component {
             recordingState: "queued",
             nextVideoStartTime: Date.now() + countdown
           });
-          setTimeout(() => {
+          this.timeout = setTimeout(() => {
             this.startRecording();
           }, countdown);
         } else if (!duration) {
@@ -114,6 +114,9 @@ export default class FourSquare extends React.Component {
         }
         break;
       case "queued":
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+        }
         this.setState({ recordingState: "none" });
         break;
       case "recording":

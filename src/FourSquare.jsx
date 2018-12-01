@@ -86,7 +86,16 @@ export default class FourSquare extends React.Component {
     console.log("toggle", recordingState);
     switch (recordingState) {
       case "none":
-        if (!duration) {
+        if (this.videos.length === 0) {
+          const countdown = 5 * 1000;
+          this.setState({
+            recordingState: "queued",
+            nextVideoStartTime: Date.now() + countdown
+          });
+          setTimeout(() => {
+            this.startRecording();
+          }, countdown);
+        } else if (!duration) {
           this.startRecording();
         } else {
           this.setState({
@@ -116,14 +125,15 @@ export default class FourSquare extends React.Component {
     } = this.state;
 
     if (recorder) {
-      console.log(recorder);
-      document.onclick = () => this.toggleRecording();
-      document.onkeypress = e => {
+      document.addEventListener("click", e => {
+        this.toggleRecording();
+      });
+      document.addEventListener("keydown", e => {
         if (e.key === " ") {
           this.toggleRecording();
           e.preventDefault();
         }
-      };
+      });
     }
 
     const [width, height] =

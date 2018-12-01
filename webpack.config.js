@@ -1,5 +1,5 @@
-const webpack = require('webpack');
-const path = require('path');
+const webpack = require("webpack");
+const path = require("path");
 
 /*
  * We've enabled UglifyJSPlugin for you! This minifies your app
@@ -9,32 +9,36 @@ const path = require('path');
  *
  */
 
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
-	entry: ['babel-polyfill', './src/index'],
-  mode: 'development',
+  entry: ["babel-polyfill", "./src/index"],
+  mode: "development",
 
-	output: {
-		filename: 'looper.bundle.js',
-		path: path.resolve(__dirname, 'build')
-	},
+  output: {
+    filename: "looper.bundle.js",
+    path: path.resolve(__dirname, "build")
+  },
 
-	module: {
-		rules: [
-			{
-				test: /\.(js|jsx)$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
-        options: { presets: ['env'] }
-			},
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+        options: { presets: ["env"] }
+      },
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: ["style-loader", "css-loader"]
       }
-		]
-	},
-  resolve: { extensions: ['*', '.js', '.jsx'] },
+    ]
+  },
+  resolve: { extensions: ["*", ".js", ".jsx"] },
 
-	//plugins: [new UglifyJSPlugin()]
+  devServer: {
+    publicPath: "/build"
+  }
+
+  //plugins: [new UglifyJSPlugin()]
 };

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "http-server -p $PORT",
-    "dev-server": "webpack-dev-server --port $PORT",
+    "dev-server": "webpack-dev-server",
     "postinstall": "if [ $BUILD ]; then npm run build; fi"
   },
   "author": "jonahkagan",

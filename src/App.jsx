@@ -3,6 +3,7 @@ import _ from "lodash";
 
 import FourSquare from "./FourSquare";
 import Reverb from "./Reverb";
+import GameOfLife from "./GameOfLife";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,6 +31,8 @@ export default class App extends React.Component {
       case 1:
         return <Reverb />;
       case 2:
+        return <GameOfLife />;
+      case 3:
         return <FourSquare />;
       default:
         return <div style={{ marginTop: 10 }}>We can't count that high</div>;

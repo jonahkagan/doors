@@ -60,7 +60,7 @@ export default class Reverb extends React.Component {
       if (command) {
         commands[command]();
       } else {
-        this.toggleRecording();
+        //this.toggleRecording();
       }
     };
 

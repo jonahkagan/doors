@@ -28,9 +28,9 @@ export default class App extends React.Component {
   render() {
     switch (this.state.index) {
       case 1:
-        return <FourSquare />;
-      case 2:
         return <Reverb />;
+      case 2:
+        return <FourSquare />;
       default:
         return <div style={{ marginTop: 10 }}>We can't count that high</div>;
     }

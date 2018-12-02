@@ -10,11 +10,13 @@ export default class Reverb extends React.Component {
     this.state = {
       recorder: null,
       recordingState: "stopped", // stopped or recording or looping
-      recording: null,
+      numLoops: 0,
+      recordings: [],
       duration: null,
       mirrored: false
     };
     this.webcam = null;
+    this.videos = [];
 
     this.onKey = this.onKey.bind(this);
     this.onClick = this.onClick.bind(this);
@@ -104,7 +106,7 @@ export default class Reverb extends React.Component {
   }
 
   async startRecording() {
-    const { recorder, recordings, duration } = this.state;
+    const { recorder, duration } = this.state;
 
     const data = [];
     recorder.ondataavailable = event => {
@@ -121,11 +123,15 @@ export default class Reverb extends React.Component {
       setTimeout(resolve, 60 * 1000);
     });
 
+    const { recordings, numLoops, recordingState } = this.state;
     const recordedBlob = new Blob(data, { type: "video/webm" });
-    if (this.state.recordingState == "looping") {
+    if (recordedBlob.size === 0) {
+      return;
+    }
+    if (recordingState == "looping") {
       this.setState({
         duration: !duration ? await getBlobDuration(recordedBlob) : duration,
-        recording: recordedBlob
+        recordings: _.take([recordedBlob].concat(recordings), numLoops)
       });
     }
   }
@@ -145,8 +151,12 @@ export default class Reverb extends React.Component {
   }
 
   loop() {
-    if (this.state.recordingState == "recording") {
-      this.setState({ recordingState: "looping" });
+    if (this.state.recordingState != "stopped") {
+      console.log("numLoops", this.state.numLoops + 1);
+      this.setState({
+        recordingState: "looping",
+        numLoops: this.state.numLoops + 1
+      });
       this.stopRecording();
     }
   }
@@ -154,9 +164,10 @@ export default class Reverb extends React.Component {
   reset() {
     this.stopRecording();
     this.setState({
-      recording: null,
+      recordings: [],
       duration: null,
-      recordingState: "stopped"
+      recordingState: "stopped",
+      numLoops: 0
     });
   }
 
@@ -165,11 +176,16 @@ export default class Reverb extends React.Component {
   }
 
   onKey(e) {
-    if (e.key === " ") {
-      this.toggleRecording();
-      e.preventDefault();
-    } else if (e.key === "m") {
-      this.setState({ mirrored: !this.state.mirrored });
+    switch (e.key) {
+      case " ":
+        this.toggleRecording();
+        e.preventDefault();
+        return;
+      case "m":
+        this.setState({ mirrored: !this.state.mirrored });
+        return;
+      case "Escape":
+        this.reset();
     }
   }
 
@@ -183,15 +199,17 @@ export default class Reverb extends React.Component {
         this.loop();
         break;
       case "looping":
-        this.reset();
+        this.loop();
         break;
     }
   }
 
   render() {
-    const { recorder, recording, recordingState, mirrored } = this.state;
+    const { recorder, recordings, recordingState, mirrored } = this.state;
 
-    const width = Math.floor(document.body.clientWidth / 2);
+    const width = Math.floor(
+      document.body.clientWidth / Math.max(2, recordings.length)
+    );
     const height = Math.floor(document.body.clientHeight);
     const style = {
       width,
@@ -220,23 +238,37 @@ export default class Reverb extends React.Component {
             muted
           />
         </div>
-        {recording && (
-          <div style={{ ...style, transform: `scaleX(${mirrored ? -1 : 1})` }}>
+        {recordings.map((recording, i) => (
+          <div
+            key={i}
+            style={{
+              ...style,
+              transform: `scaleX(${mirrored ? [-1, 1][i % 2] : 1})`
+            }}
+          >
             <video
-              ref={ref => (this.looped = ref)}
+              ref={ref => (this.videos[i] = ref)}
               src={createObjectURL(recording)}
               height={height}
               onLoadedData={() => {
-                this.looped.play();
+                if (i !== 0) {
+                  return;
+                }
+                this.videos.forEach(v => {
+                  if (v) {
+                    v.currentTime = 0;
+                    v.play();
+                  }
+                });
+                this.webcam.play();
                 if (recordingState != "stopped") {
                   this.startRecording();
                 }
               }}
-              autoPlay
               muted
             />
           </div>
-        )}
+        ))}
       </div>
     );
   }

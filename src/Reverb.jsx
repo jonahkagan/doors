@@ -84,6 +84,7 @@ export default class Reverb extends React.Component {
     };
 
     recognition.start();
+    this.recognition = recognition;
   }
 
   async componentDidMount() {
@@ -105,6 +106,7 @@ export default class Reverb extends React.Component {
   componentWillUnmount() {
     document.removeEventListener("click", this.onClick);
     document.removeEventListener("keydown", this.onKey);
+    this.recognition.onend = () => null;
   }
 
   async startRecording() {
@@ -216,10 +218,16 @@ export default class Reverb extends React.Component {
     const style = {
       width,
       height,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      overflow: "hidden"
+      overflow: "hidden",
+      position: "relative"
+    };
+    const videoStyle = {
+      position: "absolute",
+      top: "-9999px",
+      bottom: "-9999px",
+      left: "-9999px",
+      right: "-9999px",
+      margin: "auto"
     };
 
     return (
@@ -236,6 +244,7 @@ export default class Reverb extends React.Component {
           <video
             ref={ref => (this.webcam = ref)}
             height={height}
+            style={videoStyle}
             autoPlay
             muted
           />
@@ -252,6 +261,7 @@ export default class Reverb extends React.Component {
               ref={ref => (this.videos[i] = ref)}
               src={createObjectURL(recording)}
               height={height}
+              style={videoStyle}
               onLoadedData={() => {
                 if (i !== 0) {
                   return;

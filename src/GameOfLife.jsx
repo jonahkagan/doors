@@ -92,6 +92,7 @@ export default class GameOfLife extends React.Component {
     };
 
     recognition.start();
+    this.recognition = recognition;
   }
 
   async componentDidMount() {
@@ -113,6 +114,7 @@ export default class GameOfLife extends React.Component {
   componentWillUnmount() {
     document.removeEventListener("click", this.onClick);
     document.removeEventListener("keydown", this.onKey);
+    this.recognition.onend = () => null;
   }
 
   async startRecording() {
@@ -253,10 +255,16 @@ export default class GameOfLife extends React.Component {
     const style = {
       width,
       height,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      overflow: "hidden"
+      overflow: "hidden",
+      position: "relative"
+    };
+    const videoStyle = {
+      position: "absolute",
+      top: "-9999px",
+      bottom: "-9999px",
+      left: "-9999px",
+      right: "-9999px",
+      margin: "auto"
     };
 
     return (
@@ -287,6 +295,7 @@ export default class GameOfLife extends React.Component {
                       autoPlay
                       muted
                       height={height}
+                      style={videoStyle}
                     />
                   )}
                   {cell !== 0 &&
@@ -311,6 +320,7 @@ export default class GameOfLife extends React.Component {
                             this.startRecording();
                           }
                         }}
+                        style={videoStyle}
                         muted
                         loop
                       />

@@ -122,7 +122,7 @@ export default class Reverb extends React.Component {
     });
 
     const recordedBlob = new Blob(data, { type: "video/webm" });
-    if (this.state.recordingState != "stopped") {
+    if (this.state.recordingState == "looping") {
       this.setState({
         duration: !duration ? await getBlobDuration(recordedBlob) : duration,
         recording: recordedBlob
@@ -146,14 +146,18 @@ export default class Reverb extends React.Component {
 
   loop() {
     if (this.state.recordingState == "recording") {
-      this.stopRecording();
       this.setState({ recordingState: "looping" });
+      this.stopRecording();
     }
   }
 
   reset() {
     this.stopRecording();
-    this.setState({ recording: null, recordingState: "stopped" });
+    this.setState({
+      recording: null,
+      duration: null,
+      recordingState: "stopped"
+    });
   }
 
   onClick() {
@@ -219,9 +223,11 @@ export default class Reverb extends React.Component {
         {recording && (
           <div style={{ ...style, transform: `scaleX(${mirrored ? -1 : 1})` }}>
             <video
+              ref={ref => (this.looped = ref)}
               src={createObjectURL(recording)}
               height={height}
               onLoadedData={() => {
+                this.looped.play();
                 if (recordingState != "stopped") {
                   this.startRecording();
                 }

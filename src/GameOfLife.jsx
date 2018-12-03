@@ -203,13 +203,14 @@ export default class GameOfLife extends React.Component {
           return cell === null ? newIteration : iteration;
         })
       );
+      this.startRecording();
       return { ...state, iteration: newIteration, cells: newCells };
     });
   }
 
   reset() {
     this.stopRecording();
-    this.setState(this.initState());
+    this.setState({ ...this.initState(), recorder: this.state.recorder });
   }
 
   onClick() {
@@ -305,24 +306,25 @@ export default class GameOfLife extends React.Component {
                         src={createObjectURL(recordings[cell - 1])}
                         height={height}
                         onLoadedData={() => {
-                          if (i !== 0) {
-                            return;
-                          }
-                          this.videos.forEach(v => {
-                            if (v) {
-                              //v.pause();
-                              v.currentTime = 0;
-                              v.play();
-                            }
-                          });
-                          this.webcam.play();
-                          if (recordingState != "stopped") {
-                            this.startRecording();
-                          }
+                          //if (!(i === 0 && j === 0)) {
+                          //  return;
+                          //}
+                          //this.videos.forEach(v => {
+                          //  if (v) {
+                          //    //v.pause();
+                          //    v.currentTime = 0;
+                          //    v.play();
+                          //  }
+                          //});
+                          //this.webcam.play();
+                          //if (recordingState != "stopped") {
+                          //  this.startRecording();
+                          //}
                         }}
                         style={videoStyle}
                         muted
                         loop
+                        autoPlay
                       />
                     )}
                 </div>

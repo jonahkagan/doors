@@ -7,7 +7,8 @@ Created by [Postcompany](https://www.instagram.com/postcompany_dance/).
 Play with the [prototype](https://jonahkagan.github.io/doors/app.html).
 
 Watch a [live demo](https://youtu.be/AFCVGjlOK5w) at Kinetech Arts Dance Hack 2018:
-([![Doors live demo](http://img.youtube.com/vi/AFCVGjlOK5w/0.jpg)](https://youtu.be/AFCVGjlOK5w).
+
+[![Doors live demo](http://img.youtube.com/vi/AFCVGjlOK5w/0.jpg)](https://youtu.be/AFCVGjlOK5w).
 
 ## Usage
 

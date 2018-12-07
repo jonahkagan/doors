@@ -120,11 +120,13 @@ export default class GameOfLife extends React.Component {
   async startRecording() {
     const { recorder, duration } = this.state;
     if (recorder.state === "recording") {
+      console.log("already recording");
       return;
     }
 
     const data = [];
     recorder.ondataavailable = event => {
+      console.log("data");
       data.push(event.data);
       if (duration) {
         this.stopRecording();
@@ -140,6 +142,7 @@ export default class GameOfLife extends React.Component {
 
     const { recordings, iteration, recordingState } = this.state;
     const recordedBlob = new Blob(data, { type: "video/webm" });
+    console.log("recorded", recordedBlob, recordingState, iteration);
     if (recordedBlob.size === 0) {
       return;
     }

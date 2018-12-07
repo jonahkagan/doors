@@ -16,7 +16,7 @@ module.exports = {
   mode: "development",
 
   output: {
-    filename: "looper.bundle.js",
+    filename: "app.bundle.js",
     path: path.resolve(__dirname, "build")
   },
 
@@ -37,7 +37,7 @@ module.exports = {
       }
     ]
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  resolve: { extensions: ["*", ".js", ".jsx", ".css"] },
 
   devServer: {
     publicPath: "/build"

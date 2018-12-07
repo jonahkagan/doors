@@ -1,6 +1,8 @@
 import React from "react";
 import _ from "lodash";
 
+import "./style.css";
+
 import FourSquare from "./FourSquare";
 import Reverb from "./Reverb";
 import GameOfLife from "./GameOfLife";
